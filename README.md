@@ -5,6 +5,11 @@
 #### Preqs
 
 Install CApy
+```
+git clone git@github.com:getzlab/CApy.git
+cd CApy
+pip install -e
+```
 
 Then install AsymTools
 ```
