@@ -14,9 +14,9 @@ pip install -e .
 ## Example usage
 ```
 from capy.mut import standardize_maf
-
 from asymtools.annot import *
 from asymtools.plotting import *
+
 m = pd.read_csv('test/LUAD.maf',sep='\t')
 m = standardize_maf(m)
 
