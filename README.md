@@ -13,6 +13,8 @@ pip install -e
 
 Then install AsymTools
 ```
+git@github.com:getzlab/AsymTools2.git
+cd AsymTools2
 pip install -e .
 ```
 
