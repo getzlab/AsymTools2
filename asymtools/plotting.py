@@ -23,6 +23,28 @@ def twin_bar_txplot(m):
 
     plt.tight_layout()
 
+def twin_bar_repplot(m):
+
+    m['mut'] = m['ref_allele'] + '>' + m['newbase']
+
+    # Count 12 mutation types x 3 strand categories (unknown, plus, minus)
+    X = pd.crosstab(m['mut'],m['is_left'] + 2*m['is_right'])
+
+    f,ax = plt.subplots(1,3,figsize=(10,3))
+
+    x = X.sum(axis=1)
+    twin_bar_plot(x,ax=ax[0])
+    ax[0].set_title('Reference')
+    ax[0].set_ylabel('# Mutations')
+
+    twin_bar_plot(X.iloc[:,1],ax=ax[1])
+    ax[1].set_title('Left-replicating')
+
+    twin_bar_plot(X.iloc[:,2],ax=ax[2])
+    ax[2].set_title('Right-replicating')
+
+    plt.tight_layout()
+
 def twin_bar_plot(x,ax):
 
     bar_offset = .2

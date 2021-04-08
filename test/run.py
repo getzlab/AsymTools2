@@ -12,4 +12,7 @@ annotate_tx_strand(m)
 
 twin_bar_txplot(m)
 
+annotate_rep_strand(m)
+twin_bar_repplot(m)
+
 plt.show()
