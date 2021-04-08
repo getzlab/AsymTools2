@@ -24,13 +24,18 @@ from capy.mut import standardize_maf
 from asymtools.annot import *
 from asymtools.plotting import *
 
+# Load and format maf
 m = pd.read_csv('test/LUAD.maf',sep='\t')
 m = standardize_maf(m)
-
 m = m.sort_values(['chr','pos']).reset_index(drop=True)
-annotate_tx_strand(m)
 
+# Annotate and plot transcriptional asymmetries
+annotate_tx_strand(m)
 twin_bar_txplot(m)
+
+# Annotate and plot replicative asymmetries
+annotate_rep_strand(m)
+twin_bar_repplot(m)
 
 plt.show()
 
