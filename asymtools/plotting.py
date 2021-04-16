@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+from scipy.stats import gamma, beta
+
 MUT_COLORS = {'A>C': [0, 0.2, 0.8],
               'A>G': [0.1, 0.8, 0.1],
               'A>T': [0.5, 0.3, 0.7],
@@ -68,9 +70,14 @@ def twin_bar_counts_plot(x, ax):
 
     B = get_plot_df(x)
 
+    # For each pair of complementary mutation types
     for ind,row in B.iterrows():
-        ax.bar(x=row['x']-bar_offset,height=row['n1'],color=row['color'],width=bar_width,edgecolor='black')
-        ax.bar(x=row['x']+bar_offset, height=row['n2'], color=row['color'], width=bar_width, edgecolor='black')
+        # For each individual mutation type
+        for (x,y) in [(row['x']-bar_offset,row['n1']),
+                      (row['x']+bar_offset,row['n2'])]:
+            ci95 = gamma.ppf([.025,.0975],y)
+            ax.bar(x=x,height=y,yerr=np.abs(ci95.reshape(2,1)-y),capsize=10*bar_width,
+               color=row['color'],width=bar_width,edgecolor='black')
 
     ax.set_xticks(range(0,B.shape[0]))
     ax.set_xticklabels(B['name'])
@@ -79,7 +86,15 @@ def asym_ratios_plot(x,ax):
     B = get_plot_df(x)
 
     for ind, row in B.iterrows():
-        ax.bar(x=row['x'], height=np.log2(row['n1']/row['n2']), color=row['color'], edgecolor='black')
+        y = np.log2(row['n1']/row['n2'])
+
+        # CI on fraction of mutations in first orientation
+        ci95 = beta.ppf([.025, .0975], row['n1'],row['n2'])
+
+        # Transform to log ratio
+        ci95 = np.log2(ci95/(1-ci95))
+
+        ax.bar(x=row['x'], height=y,yerr=np.abs(ci95.reshape(2,1)-y),capsize=4, color=row['color'], edgecolor='black')
     ax.set_ylim(-1,1)
 
 def rc(b):
