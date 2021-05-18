@@ -23,13 +23,19 @@ def annotate_strand(m,fname,posname,negname,build=None):
         print('Assuming hg19...')
         build='hg19'
     elif build=="hg38":
-        raise Exception("Error: hg38 not yet implemented")
-
+        print("Using hg38")
+        build='hg38'
+        
     # Load relevant reference file
     reffile = pkg_resources.resource_filename('asymtools', f'reference/{fname}.{build}.txt')
     R = pd.read_csv(reffile, sep='\t')
 
-    # Adds targ_idx column with index to reference interval
+    # If chromosome prefixed with chr, remove prefix
+    if m.iloc[0]['chr'].startswith('chr'):
+        renameXY = {'chrX':23, 'chrY':24}
+        m['chr'] = m['chr'].map(lambda x: int(x[3:]) if x not in ['chrX','chrY'] else renameXY[x])
+        
+    # Adds targ_idx column with index to refehgrence interval
     map_mutations_to_targets(m,R)
 
     # Map over strand annotations
