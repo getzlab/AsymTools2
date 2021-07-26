@@ -31,7 +31,7 @@ def annotate_strand(m,fname,posname,negname,build=None):
     R = pd.read_csv(reffile, sep='\t')
 
     # If chromosome prefixed with chr, remove prefix
-    if m.iloc[0]['chr'].startswith('chr'):
+    if str(m.iloc[0]['chr']).startswith('chr'):
         renameXY = {'chrX':23, 'chrY':24}
         m['chr'] = m['chr'].map(lambda x: int(x[3:]) if x not in ['chrX','chrY'] else renameXY[x])
         
