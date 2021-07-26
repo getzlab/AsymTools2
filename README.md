@@ -26,6 +26,9 @@ from asymtools.plotting import *
 
 # Load and format maf
 m = pd.read_csv('test/LUAD.maf',sep='\t')
+
+# Depending on input maf annotation
+m = m.rename(columns={'Start_Position':'Start_position'})
 m = standardize_maf(m)
 m = m.sort_values(['chr','pos']).reset_index(drop=True)
 
