@@ -55,7 +55,7 @@ def annotate_strand(m,fname,posname,negname,build=None):
 
     # Load relevant reference file
     #reffile = pkg_resources.resource_filename('asymtools', f'reference/{fname}.{build}.txt')
-    reffile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.txt')
+    reffile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.{build}.txt')
     R = pd.read_csv(reffile, sep='\t')
 
     # Adds targ_idx column with index to reference interval

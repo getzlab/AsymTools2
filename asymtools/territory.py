@@ -4,12 +4,12 @@ import pandas as pd
 # type should be counts, exome (wxs), genome (wgs)
 # stratification should be 'rep' or 'tx'
 # Returns None if type is counts
-def get_territory(type,stratification):
+def get_territory(type,stratification,build='hg19'):
 
     if type == 'counts':
         return(None)
 
-    terfile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.txt')
+    terfile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.{build}.txt')
     W = pd.read_csv(terfile,sep='\t')
 
     # Decide whether we need coding-only, transcribed-only, or total territory
