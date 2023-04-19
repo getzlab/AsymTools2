@@ -1,8 +1,36 @@
 ## Functions for the annotation of mutations
 
 import pkg_resources
-from capy.mut import map_mutations_to_targets
+from capy.mut import map_mutations_to_targets, standardize_maf, convert_chr
 import pandas as pd
+
+# Pre-processes the maf to rename and add columns AsymTools expects
+# maf: Either be a path to a maf file on disk, or a pandas dataframe
+def preprocess_maf(maf):
+
+    if type(maf) is str:
+        m = pd.read_csv(maf, sep='\t',comment='#')
+    else:
+        m = maf
+
+    # Rename standard columns
+    m = standardize_maf(m)
+
+    # Make sure chromosomes are numeric
+    m['chr'] = convert_chr(m['chr'])
+
+    # Filter any MT or other non-standard contigs
+    standard_chr = list(range(1, 25))
+    m = m[m['chr'].isin(standard_chr)]
+
+    # Sort
+    m = m.sort_values(['chr', 'pos']).reset_index(drop=True)
+
+    # Annotate replication and transcription strand
+    annotate_tx_strand(m)
+    annotate_rep_strand(m)
+
+    return(m)
 
 # Annotate transcription strand
 def annotate_tx_strand(m,build=None):
@@ -26,7 +54,8 @@ def annotate_strand(m,fname,posname,negname,build=None):
         raise Exception("Error: hg38 not yet implemented")
 
     # Load relevant reference file
-    reffile = pkg_resources.resource_filename('asymtools', f'reference/{fname}.{build}.txt')
+    #reffile = pkg_resources.resource_filename('asymtools', f'reference/{fname}.{build}.txt')
+    reffile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.txt')
     R = pd.read_csv(reffile, sep='\t')
 
     # Adds targ_idx column with index to reference interval
