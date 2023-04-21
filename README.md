@@ -10,12 +10,12 @@ Install CApy
 ```
 git clone git@github.com:getzlab/CApy.git
 cd CApy
-pip install -e
+pip install -e .
 ```
 
 Then install AsymTools
 ```
-git@github.com:getzlab/AsymTools2.git
+git clone git@github.com:getzlab/AsymTools2.git
 cd AsymTools2
 pip install -e .
 ```
