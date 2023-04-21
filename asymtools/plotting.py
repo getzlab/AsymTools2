@@ -12,14 +12,16 @@ MUT_COLORS = {'A>C': [0, 0.2, 0.8],
               'C>G': [1, 0, 0],
               'C>T': [1, 1, 0]}
 
-# Makes twin bar plots split by transcription direction
-# m : preprocessed maf as pandas dataframe
-# normalization: type of normalization to use. Can be any of:
-# - counts (no normalization)
-# - exome / wxs
-# - genome / wgs
-def twin_bar_txplot(m,normalization='counts'):
 
+def twin_bar_txplot(m,normalization='counts'):
+    """
+    Make twin bar plots split by transcription direction
+    :param m: preprocessed maf as pandas dataframe
+    :param normalization: type of normalization to use. Can be any of counts, exome (wxs), genome (wgs)
+    :returns:
+        - ax - matplotlib axes with plots
+        - data - list of pandas dataframes with plotted data
+    """
     m['mut'] = m['ref_allele'] + '>' + m['newbase']
 
     # Count 12 mutation types x 3 strand categories (unknown, plus, minus)
@@ -37,13 +39,16 @@ def twin_bar_txplot(m,normalization='counts'):
 
     return(ax,data)
 
-# Makes twin bar plots split by replication direction
-# m : preprocessed maf as pandas dataframe
-# normalization: type of normalization to use. Can be any of:
-# - counts (no normalization)
-# - exome / wxs
-# - genome / wgs
+
 def twin_bar_repplot(m,normalization='counts'):
+    """
+    Make twin bar plots split by replication direction
+    :param m: preprocessed maf as pandas dataframe
+    :param normalization: type of normalization to use. Can be any of counts, exome (wxs), genome (wgs)
+    :returns:
+        - ax - matplotlib axes with plots
+        - data - list of pandas dataframes with plotted data
+    """
     m['mut'] = m['ref_allele'] + '>' + m['newbase']
     # Count 12 mutation types x 3 strand categories (unknown, plus, minus)
     X = pd.crosstab(m['mut'],m['is_left'] + 2*m['is_right'])
@@ -59,11 +64,17 @@ def twin_bar_repplot(m,normalization='counts'):
 
     return(ax,data)
 
-# Helper function to make twin bar plots for asymmetries genome/exome-wide, as well as broken down by transcription/replication directrion
-# X: 12 x 3 matrix of mutations counts
-# titles: List of titles for each subplot
-# N : 4 x 3 matrix of genomic territories
+
 def twin_bar_trio(X, titles, N=None):
+    """
+    Makes a trio of twin bar plots
+    :param X: 12 x 3 pandas dataframe of mutation counts for each of 12 mutation types for each of the three plots
+    :param titles: lists of titles for each plot
+    :param N: 4 x 3 pandas dataframe with genomic territories for each plot
+    :returns:
+        - ax - matplotlib axes with plots
+        - data - list of pandas dataframes with plotted data
+    """
 
     f,ax = plt.subplots(2,3,figsize=(10,4),gridspec_kw={'height_ratios':[1,.4]})
 
@@ -106,6 +117,12 @@ def twin_bar_trio(X, titles, N=None):
 # x is a pandas series with counts for all 12 mutation types (A>C,A>G,...,)
 # N is a pandas series with the genomic territory for that mutation (if using rates)
 def get_plot_df(x,N=None):
+    """
+    Organizes data into a pandas dataframe for plotting
+    :param x: pandas series with counts for the 12 mutation types
+    :param N: pandas series with genomic territory counts for A,C,G,T
+    :return: pandas dataframe with plotting data
+    """
     i = 0
     df = list()
 
@@ -157,9 +174,8 @@ def get_plot_df(x,N=None):
 
     return(df)
 
-# Creates top-half of twin-bar plot showing counts/rates
 def twin_bar_plot_top(B, ax):
-
+    """Plots top part of twin bar plot"""
     bar_offset = .2
     bar_width=.4
 
@@ -177,7 +193,7 @@ def twin_bar_plot_top(B, ax):
 
 # Creates bottom of twin-bar plot
 def asym_ratios_plot(B,ax,min_ylim=1):
-
+    """Plots bottom part of twin bar plot"""
     for ind, row in B.iterrows():
 
         # Determine how to draw error bars in log space
@@ -193,7 +209,7 @@ def asym_ratios_plot(B,ax,min_ylim=1):
     lim = np.maximum(min_ylim,max_ratio)
     ax.set_ylim(-1*lim,lim)
 
-# Helper function to reverse complement a base
 def rc(b):
+    """Returns reverse compmlement of base"""
     RC = {'A':'T','C':'G','G':'C','T':'A'}
     return RC[b]

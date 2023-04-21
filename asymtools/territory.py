@@ -1,10 +1,15 @@
 import pkg_resources
 import pandas as pd
 
-# type should be counts, exome (wxs), genome (wgs)
-# stratification should be 'rep' or 'tx'
-# Returns None if type is counts
+
 def get_territory(type,stratification,build='hg19'):
+    '''
+    Get genomic base counts for regions of the genome with specified parameters
+    :param type: Whether to use genomic or exome territory
+    :param stratification: Whether to stratify by transcription (tx) or replication (rep) direction
+    :param build: genome version, currently only hg19 supported
+    :return: pandas dataframe with counts of each base
+    '''
 
     if type == 'counts':
         return(None)
@@ -12,11 +17,9 @@ def get_territory(type,stratification,build='hg19'):
     terfile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.{build}.txt')
     W = pd.read_csv(terfile,sep='\t')
 
-    # Decide whether we need coding-only, transcribed-only, or total territory
+    # Decide whether we need coding-only or total territory
     if type in ['exome','wxs']:
         key = 'cod_terr'
-    #elif (type in ['genome','wgs']) and (stratification=='tx'):
-    #    key = 'tx_terr'
     else:
         key = 'terr'
 

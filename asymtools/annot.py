@@ -4,10 +4,13 @@ import pkg_resources
 from capy.mut import map_mutations_to_targets, standardize_maf, convert_chr
 import pandas as pd
 
-# Pre-processes the maf to rename and add columns AsymTools expects
-# maf: Either be a path to a maf file on disk, or a pandas dataframe
-def preprocess_maf(maf):
 
+def preprocess_maf(maf):
+    """
+    Pre-processes the maf to rename and add columns AsymTools expects
+    :param maf:  Either be a path to a maf file on disk, or a pandas dataframe
+    :return: pandas dataframe with preprocessed maf
+    """
     if type(maf) is str:
         m = pd.read_csv(maf, sep='\t',comment='#')
     else:
@@ -34,19 +37,23 @@ def preprocess_maf(maf):
 
 # Annotate transcription strand
 def annotate_tx_strand(m,build=None):
-    annotate_strand(m,"txdir","txplus","txminus",build=build)
+    """Annotates transcription direction (in place)"""
+    annotate_strand(m, "txplus", "txminus", build=build)
 
 # Annotate replication strand
 def annotate_rep_strand(m,build=None):
-    annotate_strand(m,"replication_direction","is_left","is_right",build=build)
+    """Annotates replication direction (in place)"""
+    annotate_strand(m, "is_left", "is_right", build=build)
 
-# m: maf file
-# fname: base name of file in reference directory
-# posname: name of column with binary annotation of positive strand
-# negname: same for negative strand
-# build: build (hg19 default)
-def annotate_strand(m,fname,posname,negname,build=None):
 
+def annotate_strand(m, posname, negname, build=None):
+    """
+    Annotates strand information (in place) using specified fields in reference
+    :param m: maf file
+    :param posname: Field to use as positive strand
+    :param negname: Field to use as negative strand
+    :param build: genome version used for mutation calling. Currently only hg19 supported
+    """
     if build is None:
         print('Assuming hg19...')
         build='hg19'
@@ -54,7 +61,6 @@ def annotate_strand(m,fname,posname,negname,build=None):
         raise Exception("Error: hg38 not yet implemented")
 
     # Load relevant reference file
-    #reffile = pkg_resources.resource_filename('asymtools', f'reference/{fname}.{build}.txt')
     reffile = pkg_resources.resource_filename('asymtools', f'reference/per_base_territories_20kb.{build}.txt')
     R = pd.read_csv(reffile, sep='\t')
 
