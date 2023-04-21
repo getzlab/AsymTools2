@@ -79,10 +79,10 @@ def twin_bar_trio(X, titles, N=None):
     f,ax = plt.subplots(2,3,figsize=(10,4),gridspec_kw={'height_ratios':[1,.4]})
 
     # Counts for each panel
-    ns = [X.sum(axis=1),X.iloc[:,1],X.iloc[:,2]]
+    ns = [X.sum(axis=1),X.loc[:,1],X.loc[:,2]]
 
     if N is not None:
-        Ns = [N.sum(axis=1),N.iloc[:,1],N.iloc[:,2]]
+        Ns = [N.sum(axis=1),N.loc[:,1],N.loc[:,2]]
 
 
     data = list()
