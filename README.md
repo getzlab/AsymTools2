@@ -54,4 +54,9 @@ If you use AsymTools in your work, please cite the original publication:
 > Mutational Strand Asymmetries in Cancer Genomes Reveal Mechanisms of DNA Damage and Repair
 >
 > Haradhvala N.J., Polak P. et al., _Cell_ 2016 Jan 21. doi: [10.1016/j.cell.2015.12.050](https://doi.org/10.1016/j.cell.2015.12.050)
+>
+
+## Legacy MATLAB version
+
+The original version of Asymtools written in MATLAB can be found in legacy/Asymtools-1.0.3
 
