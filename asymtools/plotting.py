@@ -64,10 +64,13 @@ def twin_bar_plot(x,ax):
             rc_name = f'{rc(ref)}>{rc(newbase)}'
 
             # Add twin bars
+            y=x.loc[name] if name in x.index.tolist() else 0
             bars.append(pd.Series({'name':name,
-                       'x':i-bar_offset,'y':x.loc[name],'color':colors[name]}))
+                       'x':i-bar_offset,'y':y,'color':colors[name]}))
+            
+            y=x.loc[rc_name] if rc_name in x.index.tolist() else 0
             bars.append(pd.Series({'name':rc_name,
-                       'x':i+bar_offset,'y':x.loc[rc_name],'color':colors[name]}))
+                       'x':i+bar_offset,'y':y,'color':colors[name]}))
 
             muts.append(name)
             i+=1
